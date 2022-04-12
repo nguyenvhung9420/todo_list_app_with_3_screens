@@ -22,15 +22,17 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (context) {
           return AlertDialog(
+              key: const Key('add_todo_dialog'),
               title: Text('New todo'),
               content: TextField(
                 onChanged: (value) {},
                 controller: _textFieldController,
-                decoration: InputDecoration(hintText: "Content for your todo"),
+                decoration: InputDecoration(hintText: "Content for new to-do"),
               ),
               actions: [
                 RaisedButton(
                     child: Text("Save"),
+                    key: const Key('save-todo-button'),
                     onPressed: () {
                       this
                           ._todoRepo
@@ -45,22 +47,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             done: false,
                           ))
                           .then((value) {
-                        print("Saved todo ? " + value.toString());
                         Navigator.of(context).pop();
                       });
                     })
               ]);
         });
-  }
-
-  Future<void> _markDone(Todo todo) async {
-    Todo newTodo = todo;
-    newTodo.done = !todo.done;
-    await context.read<ToDoListRepository>().updateTodoInDB(newTodo);
-    if (newTodo.done == true) {
-      // Toast.show("Marked done!", context,
-      //     duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-    }
   }
 
   @override
@@ -84,30 +75,37 @@ class _MyHomePageState extends State<MyHomePage> {
                 color: Colors.amber,
               );
             } else {
-              return ListView.separated(
-                separatorBuilder: (BuildContext context, int i) => Divider(),
-                itemCount: _todos.length,
-                itemBuilder: (BuildContext context, int i) {
-                  return ListTile(
-                    title: InkWell(
-                      child: Text(_todos[i].content),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                TodoDetailsView(todo: _todos[i])));
+              return Column(
+                children: [
+                  Text(
+                    "You have ${_todos.length} tasks",
+                    key: const Key("tasks_count"),
+                  ),
+                  Expanded(
+                    child: ListView.separated(
+                      key: const Key("all_todos_list_view"),
+                      separatorBuilder: (BuildContext context, int i) =>
+                          Divider(),
+                      itemCount: _todos.length,
+                      itemBuilder: (BuildContext context, int i) {
+                        return ListTile(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    TodoDetailsView(todo: _todos[i])));
+                          },
+                          title: Text(_todos[i].content),
+                          subtitle: Text("Modified " +
+                              Helper.makeDateString(
+                                  _todos[i].dateLatestModified)),
+                          trailing: Icon(_todos[i].done
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank),
+                        );
                       },
                     ),
-                    subtitle: Text("Modified " +
-                        Helper.makeDateString(_todos[i].dateLatestModified)),
-                    trailing: InkResponse(
-                        onTap: () {
-                          this._markDone(_todos[i]);
-                        },
-                        child: Icon(_todos[i].done
-                            ? Icons.check_box
-                            : Icons.check_box_outline_blank)),
-                  );
-                },
+                  ),
+                ],
               );
             }
           },
@@ -116,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addTodo,
         tooltip: 'Add a To-do',
+        key: const Key('add_todo_button'),
         child: Icon(Icons.add),
       ),
     );

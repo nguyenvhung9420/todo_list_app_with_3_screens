@@ -14,6 +14,13 @@ class TodoDetailsView extends StatefulWidget {
 
 class _TodoDetailsViewState extends State<TodoDetailsView> {
   TextEditingController _textFieldController = TextEditingController();
+  bool _isDone = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isDone = widget.todo.done;
+  }
 
   Future<void> _removeThisTodo() async {
     await showDialog(
@@ -33,6 +40,15 @@ class _TodoDetailsViewState extends State<TodoDetailsView> {
                     })
               ]);
         });
+  }
+
+  Future<void> _markDone() async {
+    Todo newTodo = this.widget.todo;
+    newTodo.done = !newTodo.done;
+    setState(() {
+      this._isDone = !this._isDone;
+    });
+    await context.read<ToDoListRepository>().updateTodoInDB(newTodo);
   }
 
   Future<bool> _onWillPop() async {
@@ -101,15 +117,34 @@ class _TodoDetailsViewState extends State<TodoDetailsView> {
               ),
             ),
             ListTile(
+              title: this._isDone ? Text("This task is Done!") : Text(""),
+            ),
+            ListTile(
               title: RaisedButton.icon(
-                icon: Icon(Icons.delete),
-                label: Text('Remove this to-do'),
+                color: Colors.blueAccent,
+                icon: Icon(
+                  this._isDone ? Icons.undo : Icons.check,
+                  color: Colors.white,
+                ),
+                label: Text(this._isDone ? 'Undo this task' : 'Mark as Done',
+                    style: new TextStyle(color: Colors.white)),
+                onPressed: () async {
+                  await _markDone();
+                },
+              ),
+            ),
+            ListTile(
+              title: RaisedButton.icon(
+                icon: Icon(Icons.delete, color: Colors.white),
+                color: Colors.redAccent,
+                label: Text('Remove this to-do',
+                    style: new TextStyle(color: Colors.white)),
                 onPressed: () async {
                   await _removeThisTodo();
                   Navigator.of(context).pop(true);
                 },
               ),
-            )
+            ),
           ],
         ),
       ),

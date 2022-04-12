@@ -5,6 +5,7 @@ import 'package:todo_list_app_with_3_screens/controllers/todolist_repository.dar
 import 'package:todo_list_app_with_3_screens/views/home_view.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => ToDoListRepository()),
@@ -17,24 +18,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: FutureBuilder(
-        future: initDatabase(),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return MyHomePage();
-          } else {
-            return Material(
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-        },
-      ),
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage()
+
+        // FutureBuilder(
+        //   future: initDatabase(),
+        //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.done) {
+        //       return MyHomePage();
+        //     } else {
+        //       return Material(
+        //         child: Center(
+        //           child: CircularProgressIndicator(),
+        //         ),
+        //       );
+        //     }
+        //   },
+        // ),
+        );
   }
 }
