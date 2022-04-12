@@ -1,16 +1,30 @@
-# todo_list_app_with_3_screens
+# To-Do List Application
 
-A new Flutter project.
+A  Flutter project made by Nguyen Van Hung.
+- Email: nguyenvhung@live.fr or van_hung_nguyen@yahoo.com
+- Phone number: +84 911 911 320
+- Main skill set: Flutter Dart and iOS Swift and Objective-C
 
-## Getting Started
+## Instructions
 
-This project is a starting point for a Flutter application.
+Features:
+- View to-dos
+- Add, remove and update a to-do
 
-A few resources to get you started if this is your first Flutter project:
+Run the application:
+- Step 1: run `flutter pub get` to get all dependencies of the app.
+- Step 2: connect a mobile device to your computer or start a Simulator (iOS) or Emulator (Android),
+- Step 3: run `flutter run --no-sound-null-safety` to start compiling the app onto the mobile device.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Main technical instructions and characteristics:
+- Press (+) Plus button on the main screen to add a new to-do item.
+    - Sembast databse as No-SQL local database will save the new to-do.
+    - The app is using Provider to state managing, replacing setState in each view.
+- Each to-do item has properties: creation date, last updated date, content as text, and done/not-done as boolean.
+- Press the checkbox at the trailing of each to-do item to mark it done/undone:
+    - Marking an item done/undone will not update its last updated date
+- Press on the title of each to-do to see its details.
+- Change the content of a to-do in its 'Details' screen:
+    - When the content is changed, the app will prompt if user want to save it.
+    - User can delete the to-do item as well. 
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
